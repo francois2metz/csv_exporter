@@ -7,7 +7,8 @@ This application will generate a CSV file when provided with the following
 - Metric Query
 
 ## How to run
-docker run -it -p 80:80 benjamincrom/datadog-csv-exporter
+
+docker run --rm -it -p 80:80 benjamincrom/datadog-csv-exporter
 
 ## More information
 [Datadog Home Page](https://www.datadoghq.com)

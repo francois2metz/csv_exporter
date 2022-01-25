@@ -55,6 +55,7 @@ def send_file(path):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if 'metric_query' in request.form and request.form['metric_query'] != '':
+        api_url = request.form.get('api_url')
         api_key = request.form.get('api_key')
         app_key = request.form.get('app_key')
         start_time_dt = dateutil.parser.parse(request.form.get('start_time'))
@@ -64,10 +65,11 @@ def index():
         metric_query = request.form.get('metric_query')
 
         metrics_url = (
-            'https://api.datadoghq.com/api/v1/query?'
+            '{api_url}/api/v1/query?'
             'api_key={api_key}&application_key={app_key}&query={query}'
             '&from={start_time}&to={end_time}'
         ).format(
+            api_url=api_url,
             api_key=api_key,
             app_key=app_key,
             query=metric_query,
@@ -80,10 +82,11 @@ def index():
         filepath = '/files/' + filename
 
         graph_url = (
-            'https://api.datadoghq.com/api/v1/graph/snapshot?'
+            '{api_url}/api/v1/graph/snapshot?'
             'api_key={api_key}&application_key={app_key}&metric_query={query}'
             '&start={start_time}&end={end_time}'
         ).format(
+            api_url=api_url,
             api_key=api_key,
             app_key=app_key,
             query=metric_query,
@@ -97,12 +100,14 @@ def index():
 
         time.sleep(6)
     elif 'api_key' in request.args and request.args['api_key']:
+        api_url = 'https://api.datadoghq.com'
         api_key = request.args.get('api_key')
         app_key = request.args.get('app_key')
         filename = ''
         filepath = ''
         graph_url = ''
     else:
+        api_url = 'https://api.datadoghq.com'
         api_key = ''
         app_key = ''
         filename = ''
@@ -113,6 +118,7 @@ def index():
                            filename=filename,
                            filepath=filepath,
                            graph_url=graph_url,
+                           api_url=api_url,
                            api_key=api_key,
                            app_key=app_key)
 
